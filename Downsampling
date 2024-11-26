@@ -1,0 +1,39 @@
+%Downsampling
+clc;
+clear all;
+close all;
+N=input('Length of sinusoidal signal = ');
+ M=input('Downsampling factor = ');
+n =0:1:N-1; % time vector
+ x =0.25 * sinc(0.25 * (n- floor(N/2))); 
+subplot(2,2,1);
+ stem(n, x, 'filled');
+ xlabel('n');
+ ylabel('x');
+ title('Input Signal');
+y =x(1:M:N); 
+ n1 = 1:1:length(y); 
+subplot(2,2,2);
+ stem(n1, y, 'filled');
+ xlabel('n');
+  ylabel('y');
+ title('Downsampled Signal');
+ f = linspace(0, pi, 512); 
+ h =freqz(x, 1, f); 
+ subplot(2,2,3);
+ plot(f, abs(h)); 
+ xlabel('Frequency (rad/sample)');
+ ylabel('Magnitude');
+ title('Frequency Response of Input Signal');
+h1 = freqz(y, 1, f); 
+ subplot(2,2,4);
+ plot(f, abs(h1)); 
+ xlabel('Frequency (rad/sample)');
+ ylabel('Magnitude');
+ title('Frequency Response of Downsampled Signal');
+
+
+
+
+
+
