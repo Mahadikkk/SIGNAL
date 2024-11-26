@@ -1,0 +1,47 @@
+%DFT
+clc;
+ close all;
+ clear;
+
+xn = input('Enter the input sequence: ');
+N = input('Enter the number of points in DFT: ');
+
+N1 = length(xn);
+xn = [xn zeros(1, N - N1)];
+n = 0:N-1;
+
+wn = exp(-1i * 2 * pi / N); 
+xk = xn * wn .^ (n' * n);  
+
+figure;
+subplot(3, 2, 1);
+stem(n, xn, 'filled');
+xlabel('n (Time)');
+ylabel('Amplitude');
+title('Input Sequence');
+
+subplot(3, 2, 2);
+stem(n, real(xk), 'filled');
+xlabel('k (Frequency)');
+ylabel('Amplitude');
+title('Real Part of DFT');
+
+subplot(3, 2, 3);
+stem(n, imag(xk), 'filled');
+xlabel('k (Frequency)');
+ylabel('Amplitude');
+title('Imaginary Part of DFT');
+
+subplot(3, 2, 4);
+stem(n, abs(xk), 'filled');
+xlabel('k (Frequency)');
+ylabel('Magnitude');
+title('Magnitude Spectrum');
+
+subplot(3, 2, 5);
+stem(n, angle(xk), 'filled'); 
+xlabel('k (Frequency)');
+ylabel('Phase (Radians)');
+title('Phase Spectrum');
+
+
