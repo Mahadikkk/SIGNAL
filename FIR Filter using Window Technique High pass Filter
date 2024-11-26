@@ -1,0 +1,48 @@
+%FIR Filter using Window Technique High pass Filter 
+
+clc;
+clear all;
+close all;
+wc = input('Enter the cutoff frequency (in radians): '); 
+N = input('Enter the order/length of filter: ');         
+alpha = floor((N-1)/2); 
+hd = zeros(1, N);       
+for n = 1:N
+    if (n-1) == alpha
+        hd(n) = 1 - (wc/pi); 
+    else
+        hd(n) = (1 / (pi * (n - 1 - alpha))) * ...
+                (sin(pi * (n - 1 - alpha)) - sin(wc * (n - 1 - alpha))); 
+    end
+end
+
+wn = hamming(N)'; 
+hn = hd .* wn;    
+w = 0:0.01:pi;           
+h = freqz(hn, 1, w);     
+subplot(3, 1, 1);
+plot(w/pi, abs(h), 'LineWidth', 1.5);
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Magnitude');
+title('Frequency Response of High-Pass FIR Filter');
+grid on;
+fs = 570;                  
+t = 0:(1/fs):1;            
+x = 2*sin(2*pi*50*t) + 4*sin(2*pi*120*t) + 8*sin(2*pi*240*t); 
+y = fft(x);                
+f = (0:length(x)-1) * fs / length(x); 
+subplot(3, 1, 2);
+stem(f, abs(y), 'filled');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude |X(f)|');
+title('Frequency Spectrum of Input Signal');
+grid on;
+H = freqz(hn, 1, 2*pi*f/fs); 
+yout = y .* H';              
+subplot(3, 1, 3);
+stem(f, abs(yout), 'filled');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude |Y(f)|');
+title('Frequency Spectrum of Output Signal');
+grid on;
+
