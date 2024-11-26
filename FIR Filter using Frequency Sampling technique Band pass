@@ -1,0 +1,68 @@
+%FIR Filter using Frequency Sampling technique Band pass
+
+clc;
+clear all;
+close all;
+
+N = 7;                            
+Hk = [0, 1, 1, 0, 0, 1, 1];       
+
+ang = [linspace(-pi*(N-1)/N, 0, (N+1)/2), linspace(0, pi*(N-1)/N, (N-1)/2)];
+
+H = Hk .* exp(1i * ang);           
+hn = real(ifft(H));                
+
+[h1, w] = freqz(hn, 1);
+
+figure;
+subplot(3, 2, 1);
+stem(0:N-1, Hk, 'filled');
+xlabel('k');
+ylabel('|H(k)|');
+title('Magnitude of H(k)');
+
+subplot(3, 2, 2);
+stem(0:N-1, ang, 'filled');
+xlabel('k');
+ylabel('Phase of H(k)');
+title('Angle of H(k)');
+
+subplot(3, 2, 3);
+stem(0:N-1, hn, 'filled');
+xlabel('n');
+ylabel('h(n)');
+title('Impulse Response of FIR Filter');
+
+subplot(3, 2, 4);
+plot(w/pi, abs(h1));
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('|H(e^{j\omega})|');
+title('Frequency Response of FIR Filter');
+
+fs = 511;                          
+t = 0:1/fs:1;                      
+x = 2*sin(2*pi*50*t) + 4*sin(2*pi*120*t) + 8*sin(2*pi*240*t); 
+
+y = fft(x);
+f = (0:length(x)-1) * fs / length(x); 
+
+yout = y .* fftshift(h1');          
+
+subplot(3, 2, 5);
+stem(f, abs(y), 'filled');
+xlabel('Frequency (Hz)');
+ylabel('|X(f)|');
+title('Frequency Spectrum of Input Signal');
+
+subplot(3, 2, 6);
+stem(f, abs(yout), 'filled');
+xlabel('Frequency (Hz)');
+ylabel('|Y(f)|');
+title('Frequency Spectrum of Output Signal');
+
+
+
+
+
+
+
